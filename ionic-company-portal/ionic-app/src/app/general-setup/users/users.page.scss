@@ -1,0 +1,199 @@
+@import '../../../theme/variables';
+@import '../roles/roles.page.scss';
+
+.users-page {
+  display: grid;
+  gap: 14px;
+}
+
+.users-hero {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 14px;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.14), transparent 45%),
+    linear-gradient(135deg, #17314f 0%, #1f5a80 52%, #1f8e9a 100%);
+  border: none;
+
+  .hero-kicker {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-size: 11px;
+    color: rgba(226, 241, 255, 0.78);
+    font-weight: 700;
+  }
+
+  .page-title {
+    color: #f7fbff;
+    margin: 8px 0 0;
+  }
+
+  .page-subtitle {
+    color: rgba(233, 244, 255, 0.9);
+    margin-top: 8px;
+    max-width: 56ch;
+  }
+}
+
+.users-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  align-content: center;
+}
+
+.users-table-card {
+  overflow: hidden;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 13px;
+    color: var(--color-text-primary);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: rgba(240, 246, 255, 0.8);
+  }
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.identity {
+  display: grid;
+  gap: 2px;
+}
+
+.identity-name {
+  font-weight: 700;
+  color: #1a2f4a;
+}
+
+.identity-user {
+  font-size: 11px;
+  color: #6a7f9a;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mono-tag {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: #2c4a78;
+  background: #eef4ff;
+  border: 1px solid #d2e0f6;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.data-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.role-pill {
+  color: #245f8e;
+  background: #ebf7ff;
+  border: 1px solid #cde8fa;
+}
+
+.dept-pill {
+  color: #205c53;
+  background: #e9f9f3;
+  border: 1px solid #c6ebdc;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-toolbar {
+  border: 1px dashed #d4e0f1;
+  background: linear-gradient(140deg, #f8fbff 0%, #f2f8ff 100%);
+}
+
+.notice {
+  padding: 10px 12px;
+  color: #495b77;
+  border: 1px solid #d6e0ee;
+  background: #f8fbff;
+
+  &.error {
+    color: #b92032;
+    border-color: #f0c7d0;
+    background: #fff4f6;
+  }
+}
+
+.modal-intro {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d9e4f2;
+  background: #f6faff;
+  color: #4f6788;
+  font-size: 12px;
+}
+
+.field-error {
+  margin-top: 6px;
+  color: #c0233a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .users-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+}

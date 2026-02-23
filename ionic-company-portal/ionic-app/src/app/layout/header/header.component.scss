@@ -1,0 +1,394 @@
+@import '../../../theme/variables';
+
+.app-header {
+  height: var(--header-height);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.hamburger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: var(--transition);
+  
+  ion-icon { font-size: 20px; }
+  
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+  
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  
+  .breadcrumb-home { font-size: 14px; }
+  .breadcrumb-sep { font-size: 10px; }
+  
+  span {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+  
+  @media (max-width: 640px) {
+    display: none;
+  }
+}
+
+.header-center {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 auto;
+  
+  @media (max-width: 640px) {
+    max-width: 100%;
+  }
+}
+
+.header-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  
+  ion-icon {
+    position: absolute;
+    left: 12px;
+    font-size: 15px;
+    color: var(--color-text-muted);
+  }
+  
+  input {
+    width: 100%;
+    padding: 9px 50px 9px 36px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: var(--color-text-primary);
+    background: var(--color-surface-2);
+    outline: none;
+    transition: var(--transition);
+    
+    &:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(232,160,32,0.1);
+      background: var(--color-surface);
+    }
+    
+    &::placeholder { color: var(--color-text-muted); }
+  }
+  
+  .search-kbd {
+    position: absolute;
+    right: 10px;
+    font-size: 10px;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-family: monospace;
+    
+    @media (max-width: 480px) { display: none; }
+  }
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: var(--transition);
+  position: relative;
+  
+  ion-icon { font-size: 18px; }
+  
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: var(--color-accent-glow);
+  }
+}
+
+.notification-btn .notif-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  border: 1.5px solid var(--color-surface);
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 6px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1.5px solid transparent;
+  
+  &:hover {
+    background: var(--color-surface-2);
+    border-color: var(--color-border);
+  }
+  
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8A020, #F5B942);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    font-weight: 800;
+    font-size: 12px;
+  }
+  
+  .user-info {
+    @media (max-width: 768px) { display: none; }
+    
+    .user-name {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      white-space: nowrap;
+    }
+    
+    .user-role {
+      display: block;
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+  }
+  
+  .user-chevron {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    
+    @media (max-width: 640px) { display: none; }
+  }
+}
+
+// User dropdown
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  animation: slideDown 0.15s ease;
+  overflow: hidden;
+  
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border);
+    
+    .avatar.lg {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #E8A020, #F5B942);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      font-weight: 800;
+      font-size: 14px;
+    }
+    
+    .name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 0 0 2px 0;
+    }
+    
+    .email {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+  }
+  
+  ul {
+    list-style: none;
+    padding: 8px;
+    margin: 0;
+    
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      
+      ion-icon { font-size: 16px; }
+      
+      &:hover { background: var(--color-surface-2); color: var(--color-text-primary); }
+      
+      &.divider {
+        padding: 0;
+        margin: 4px 0;
+        border-top: 1px solid var(--color-border);
+        cursor: default;
+        &:hover { background: none; }
+      }
+      
+      &.danger { color: var(--color-danger); &:hover { background: rgba(239,68,68,0.08); } }
+    }
+  }
+}
+
+// Notification panel
+.notif-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 80px;
+  width: 320px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  animation: slideDown 0.15s ease;
+  overflow: hidden;
+  
+  @media (max-width: 480px) {
+    right: 0;
+    width: calc(100vw - 30px);
+  }
+  
+  .notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+    
+    h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+    
+    button {
+      font-size: 12px;
+      color: var(--color-accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+    }
+  }
+  
+  .notif-list {
+    list-style: none;
+    padding: 8px;
+    margin: 0;
+    
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+      
+      &:hover { background: var(--color-surface-2); }
+      
+      &.unread { background: rgba(232,160,32,0.04); }
+    }
+    
+    .notif-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      
+      ion-icon { font-size: 16px; }
+      
+      &.success { background: rgba(16,185,129,0.1); color: var(--color-success); }
+      &.warning { background: rgba(245,158,11,0.1); color: var(--color-warning); }
+      &.info { background: rgba(59,130,246,0.1); color: var(--color-info); }
+    }
+    
+    .notif-body {
+      p { font-size: 13px; color: var(--color-text-primary); margin: 0 0 3px 0; }
+      small { font-size: 11px; color: var(--color-text-muted); }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

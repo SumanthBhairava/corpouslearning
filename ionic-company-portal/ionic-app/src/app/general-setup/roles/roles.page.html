@@ -1,0 +1,166 @@
+<div class="roles-content">
+  <div class="setup-page roles-page">
+    <section class="roles-hero card">
+      <div class="roles-hero__copy">
+        <p class="hero-kicker">Access Governance</p>
+        <h1 class="page-title">Roles</h1>
+        <p class="page-subtitle">Define access controls, enforce permission boundaries, and keep role ownership centralized.</p>
+      </div>
+      <div class="roles-hero__stats">
+        <div class="stat-box">
+          <span>Total Roles</span>
+          <strong>{{ roleCount }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>Permissions</span>
+          <strong>{{ totalPermissions }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>Assigned Users</span>
+          <strong>{{ totalAssignedUsers }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-toolbar card">
+      <div class="toolbar-left">
+        <button class="btn-outline" (click)="loadRoles()" [disabled]="isLoading">{{ isLoading ? 'Loading...' : 'Load Roles' }}</button>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn-primary" (click)="openModal()" [disabled]="!canManageRoles">
+          <ion-icon name="add-outline"></ion-icon>
+          Add Role
+        </button>
+      </div>
+    </div>
+
+    <div class="card notice" *ngIf="!canManageRoles">
+      You have view-only access. Only <strong>Admin</strong> or <strong>Super Admin</strong> can add, edit, or delete roles.
+    </div>
+
+    <div class="card notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <section class="card roles-table-card">
+      <div class="card-header">
+        <h3>Role Registry</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="roles-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Description</th>
+              <th>Users</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let role of roles">
+              <td>
+                <div class="role-cell">
+                  <div class="role-icon" [style.background]="role.iconBg" [style.color]="role.iconColor">
+                    <ion-icon [name]="role.icon"></ion-icon>
+                  </div>
+                  <span>{{ role.name }}</span>
+                </div>
+              </td>
+              <td class="desc-cell">{{ role.description || 'No description provided.' }}</td>
+              <td>{{ role.userCount }}</td>
+              <td>
+                <div class="actions-cell">
+                  <button class="action-btn edit" (click)="editRole(role)" [disabled]="!canManageRoles"><ion-icon name="create-outline"></ion-icon></button>
+                  <button class="action-btn delete" (click)="deleteRole(role)" [disabled]="!canManageRoles"><ion-icon name="trash-outline"></ion-icon></button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!roles.length">
+              <td colspan="4" class="empty-cell">No roles found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal($event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>{{ editMode ? 'Edit Role' : 'Create New Role' }}</h3>
+        <button class="close-btn" (click)="closeModal(null)"><ion-icon name="close-outline"></ion-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Role Name</label>
+          <input type="text" class="form-control" [class.invalid]="submitted && !!formErrors.name" placeholder="e.g. Contract Reviewer" [(ngModel)]="form.name"/>
+          <div class="field-error" *ngIf="submitted && formErrors.name">{{ formErrors.name }}</div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" [class.invalid]="submitted && !!formErrors.description" rows="2" placeholder="What can this role do?" [(ngModel)]="form.description"></textarea>
+          <div class="field-error" *ngIf="submitted && formErrors.description">{{ formErrors.description }}</div>
+        </div>
+        <div class="form-group">
+          <label>Menu Permissions</label>
+          <div class="perm-controls">
+            <label class="perm-select-all">
+              <input
+                type="checkbox"
+                [checked]="areAllPermissionsSelected()"
+                (change)="toggleAllPermissions($any($event.target).checked)"
+              />
+              <span>Select All</span>
+            </label>
+            <button class="perm-btn ghost" type="button" (click)="toggleAllPermissions(false)">Clear All</button>
+          </div>
+          <div class="perm-table-wrap">
+            <table class="perm-table">
+              <thead>
+                <tr>
+                  <th class="menu-col">Menu</th>
+                  <th *ngFor="let col of permissionColumns" class="col-head">
+                    <div class="col-head-inner">
+                      <span>{{ col.label }}</span>
+                      <input
+                        type="checkbox"
+                        [checked]="isColumnFullySelected(col.key)"
+                        (change)="toggleColumnPermissions(col.key, $any($event.target).checked)"
+                      />
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of permissionRows">
+                  <td>
+                    <div class="row-head">
+                      <span>{{ row.label }}</span>
+                      <label class="row-all">
+                        <input
+                          type="checkbox"
+                          [checked]="isRowFullySelected(row.key)"
+                          (change)="toggleRowPermissions(row.key, $any($event.target).checked)"
+                        />
+                        <small>All</small>
+                      </label>
+                    </div>
+                  </td>
+                  <td *ngFor="let col of permissionColumns">
+                    <input
+                      type="checkbox"
+                      [checked]="isPermissionChecked(row.key, col.key)"
+                      (change)="togglePermission(row.key, col.key, $any($event.target).checked)"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="closeModal(null)">Cancel</button>
+        <button class="btn-primary" (click)="saveRole()">{{ editMode ? 'Save Changes' : 'Create Role' }}</button>
+      </div>
+    </div>
+  </div>
+</div>

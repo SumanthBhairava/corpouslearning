@@ -1,0 +1,469 @@
+@import '../../../theme/variables';
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-width);
+  background: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  
+  // Subtle texture
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+  
+  // Gold accent line on right
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(232,160,32,0.3) 30%, rgba(232,160,32,0.3) 70%, transparent);
+  }
+
+  &.collapsed {
+    width: var(--sidebar-collapsed);
+    
+    .logo-name,
+    .user-info,
+    .nav-text,
+    .nav-label,
+    .nav-arrow,
+    .nav-badge,
+    .nav-children,
+    .plan-info,
+    .logout-btn span,
+    .sidebar-footer__plan small { display: none; }
+    
+    .sidebar-logo .collapse-btn ion-icon {
+      transform: rotate(180deg);
+    }
+
+    .sidebar-logo {
+      justify-content: center;
+      padding: 12px 8px;
+      gap: 0;
+    }
+
+    .sidebar-logo .logo-mark {
+      display: none;
+    }
+
+    .sidebar-logo .collapse-btn {
+      width: 32px;
+      height: 32px;
+      border-color: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.75);
+    }
+    
+    .nav-item {
+      justify-content: center;
+      padding: 12px;
+    }
+    
+    .nav-icon { margin: 0; }
+    
+    .user-mini {
+      justify-content: center;
+      padding: 12px;
+      
+      .avatar { margin: 0; }
+    }
+    
+    .sidebar-footer {
+      align-items: center;
+      
+      &__plan { justify-content: center; }
+    }
+    
+    .logout-btn {
+      padding: 10px;
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease, width 0.3s ease;
+    
+    .sidebar-mobile-open & {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Mobile sidebar open state
+:host-context(.mobile-open) .sidebar {
+  @media (max-width: 768px) {
+    transform: translateX(0);
+  }
+}
+
+// ==========================================
+// LOGO
+// ==========================================
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  position: relative;
+  
+  .logo-mark {
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .logo-name {
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  .collapse-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    flex-shrink: 0;
+    transition: var(--transition);
+    
+    ion-icon {
+      font-size: 13px;
+      transition: var(--transition);
+    }
+    
+    &:hover {
+      background: rgba(255,255,255,0.12);
+      color: #ffffff;
+    }
+  }
+}
+
+// ==========================================
+// USER MINI
+// ==========================================
+
+.user-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8A020, #F5B942);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    font-weight: 800;
+    font-size: 13px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(232,160,32,0.3);
+  }
+  
+  .user-info {
+    overflow: hidden;
+    
+    .user-name {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .user-role {
+      display: block;
+      font-size: 11px;
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+  }
+}
+
+// ==========================================
+// NAVIGATION
+// ==========================================
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 10px 6px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 2px;
+  
+  &:hover {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.9);
+  }
+  
+  &.active {
+    background: rgba(232, 160, 32, 0.15);
+    color: var(--color-accent);
+    
+    .nav-icon ion-icon {
+      color: var(--color-accent);
+    }
+  }
+  
+  .nav-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    ion-icon { font-size: 16px; }
+  }
+  
+  .nav-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .nav-arrow {
+    font-size: 12px;
+    transition: transform 0.25s ease;
+    color: rgba(255,255,255,0.3);
+  }
+  
+  .nav-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    white-space: nowrap;
+    
+    &.count {
+      background: rgba(239,68,68,0.2);
+      color: #FC8181;
+    }
+  }
+}
+
+// Group (accordion)
+.nav-group {
+  .nav-parent .nav-arrow { transform: rotate(-90deg); }
+  
+  &.open {
+    .nav-parent .nav-arrow { transform: rotate(0deg); }
+    .nav-children { max-height: 200px; }
+  }
+}
+
+.nav-children {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding-left: 12px;
+  
+  .nav-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px 8px 14px;
+    border-radius: 8px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 2px;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 60%;
+      background: rgba(255,255,255,0.1);
+    }
+    
+    ion-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .child-dot { display: none; }
+    
+    &:hover {
+      color: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.06);
+    }
+    
+    &.active {
+      color: var(--color-accent);
+      background: rgba(232,160,32,0.1);
+      
+      &::before { background: var(--color-accent); }
+    }
+  }
+}
+
+// ==========================================
+// SIDEBAR FOOTER
+// ==========================================
+
+.sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  &__plan {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(232,160,32,0.08);
+    border: 1px solid rgba(232,160,32,0.15);
+    border-radius: 10px;
+    
+    .plan-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(232,160,32,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-accent);
+      flex-shrink: 0;
+      
+      ion-icon { font-size: 14px; }
+    }
+    
+    .plan-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      
+      span {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-accent);
+        white-space: nowrap;
+      }
+      
+      small {
+        font-size: 11px;
+        color: rgba(255,255,255,0.35);
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.35);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+  
+  ion-icon { font-size: 16px; }
+  
+  &:hover {
+    background: rgba(239,68,68,0.1);
+    color: #FC8181;
+  }
+}

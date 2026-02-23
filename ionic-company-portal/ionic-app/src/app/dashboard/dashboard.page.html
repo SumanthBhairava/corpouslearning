@@ -1,0 +1,101 @@
+<div class="roles-content">
+  <div class="setup-page dashboard-page">
+    <section class="dashboard-hero card">
+      <div class="hero-copy">
+        <p class="hero-kicker">Contract Intelligence Platform</p>
+        <h1 class="page-title">Operations Dashboard</h1>
+        <p class="page-subtitle">
+          Welcome back, {{ firstName }}. Monitor corpus learning, analysis throughput, and workflow execution.
+        </p>
+        <div class="hero-badges">
+          <span class="hero-badge">Workspace Ops</span>
+          <span class="hero-badge">RAG Pipeline</span>
+          <span class="hero-badge">Review Workflow</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a routerLink="/app/injection" class="btn-primary">
+          <ion-icon name="cloud-upload-outline"></ion-icon>
+          Upload Corpus
+        </a>
+        <a routerLink="/app/analyse" class="btn-outline">
+          <ion-icon name="scan-outline"></ion-icon>
+          Run Analysis
+        </a>
+      </div>
+    </section>
+
+    <section class="summary-grid">
+      <article class="card summary-card" *ngFor="let card of summaryCards" [attr.data-tone]="card.tone">
+        <div class="summary-head">
+          <span class="summary-label">{{ card.label }}</span>
+          <div class="summary-icon">
+            <ion-icon [name]="card.icon"></ion-icon>
+          </div>
+        </div>
+        <div class="summary-value">{{ card.value }}</div>
+        <div class="summary-delta">{{ card.delta }}</div>
+        <div class="summary-track">
+          <div class="summary-fill"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="card modules-card">
+        <div class="card-header">
+          <h3>Platform Modules</h3>
+          <span class="sub-label">Primary navigation</span>
+        </div>
+        <div class="module-list">
+          <a class="module-tile" *ngFor="let m of quickModules" [attr.data-tone]="m.tone" [routerLink]="m.route">
+            <div class="module-icon">
+              <ion-icon [name]="m.icon"></ion-icon>
+            </div>
+            <div class="module-copy">
+              <strong>{{ m.title }}</strong>
+              <p>{{ m.desc }}</p>
+            </div>
+            <span class="module-cta">{{ m.cta }}</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="card health-card">
+        <div class="card-header">
+          <h3>Service Health</h3>
+          <span class="sub-label">Live status snapshot</span>
+        </div>
+        <div class="health-list">
+          <div class="health-row" *ngFor="let s of serviceHealth">
+            <div class="health-main">
+              <strong>{{ s.name }}</strong>
+              <span>{{ s.endpoint }}</span>
+            </div>
+            <span class="status-pill" [class.ok]="s.status === 'healthy'" [class.warn]="s.status === 'warning'" [class.fail]="s.status === 'down'">
+              {{ s.status }}
+            </span>
+            <span class="latency">{{ s.latency }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card timeline-card">
+        <div class="card-header">
+          <h3>Recent Timeline</h3>
+          <span class="sub-label">Latest platform events</span>
+        </div>
+        <div class="timeline-list">
+          <div class="timeline-item" *ngFor="let item of timeline">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-meta">{{ item.time }}</div>
+              <strong>{{ item.title }}</strong>
+              <p>{{ item.detail }}</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>

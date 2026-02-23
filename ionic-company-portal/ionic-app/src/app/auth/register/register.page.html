@@ -1,0 +1,176 @@
+<ion-content class="register-content">
+  <div class="auth-wrapper">
+    <!-- Left Panel -->
+    <div class="brand-panel">
+      <div class="brand-panel__bg"></div>
+      <div class="brand-panel__content">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="10" fill="rgba(255,255,255,0.15)"/>
+              <path d="M8 16L14 10L20 16L14 22L8 16Z" fill="#E8A020"/>
+              <path d="M14 10L20 4L26 10L20 16L14 10Z" fill="rgba(255,255,255,0.6)"/>
+              <path d="M14 22L20 16L26 22L20 28L14 22Z" fill="rgba(255,255,255,0.3)"/>
+            </svg>
+          </div>
+          <span class="logo-text">TechCorp</span>
+        </div>
+
+        <div class="feature-list">
+          <h2>Everything you need to manage your company</h2>
+          <ul>
+            <li>
+              <span class="feat-icon"><ion-icon name="people-outline"></ion-icon></span>
+              <div>
+                <strong>User Management</strong>
+                <p>Manage team members with granular access control</p>
+              </div>
+            </li>
+            <li>
+              <span class="feat-icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+              <div>
+                <strong>Role-Based Access</strong>
+                <p>Define roles and permissions precisely</p>
+              </div>
+            </li>
+            <li>
+              <span class="feat-icon"><ion-icon name="business-outline"></ion-icon></span>
+              <div>
+                <strong>Department Hierarchy</strong>
+                <p>Organize teams with structured departments</p>
+              </div>
+            </li>
+            <li>
+              <span class="feat-icon"><ion-icon name="analytics-outline"></ion-icon></span>
+              <div>
+                <strong>Real-time Analytics</strong>
+                <p>Get insights on your organization's performance</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Form Panel -->
+    <div class="form-panel">
+      <div class="form-panel__inner">
+        <div class="form-header">
+          <h2>Create account</h2>
+          <p>Set up your company portal in minutes</p>
+        </div>
+
+        <form (ngSubmit)="onRegister()" #regForm="ngForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" class="form-control" placeholder="John" [(ngModel)]="formData.firstName" name="firstName" required/>
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" class="form-control" placeholder="Smith" [(ngModel)]="formData.lastName" name="lastName" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Company Name</label>
+            <div class="input-with-icon">
+              <ion-icon name="business-outline" class="input-icon"></ion-icon>
+              <input type="text" class="form-control" placeholder="Your Company Ltd." [(ngModel)]="formData.company" name="company" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Work Email</label>
+            <div class="input-with-icon">
+              <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+              <input type="email" class="form-control" placeholder="john@company.com" [(ngModel)]="formData.email" name="email" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <div class="input-with-icon">
+              <ion-icon name="call-outline" class="input-icon"></ion-icon>
+              <input type="tel" class="form-control" placeholder="+1 (555) 000-0000" [(ngModel)]="formData.phone" name="phone"/>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Password</label>
+              <div class="input-with-icon">
+                <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                <input [type]="showPass ? 'text' : 'password'" class="form-control" placeholder="Min. 8 characters" [(ngModel)]="formData.password" name="password" required/>
+                <button type="button" class="eye-btn" (click)="showPass = !showPass">
+                  <ion-icon [name]="showPass ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <div class="input-with-icon">
+                <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                <input [type]="showConfirm ? 'text' : 'password'" class="form-control" placeholder="Repeat password" [(ngModel)]="formData.confirmPassword" name="confirmPassword" required/>
+                <button type="button" class="eye-btn" (click)="showConfirm = !showConfirm">
+                  <ion-icon [name]="showConfirm ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Password strength -->
+          <div class="pass-strength" *ngIf="formData.password">
+            <div class="strength-bars">
+              <div class="bar" [class.active]="passStrength >= 1" [class.weak]="passStrength === 1" [class.medium]="passStrength === 2" [class.strong]="passStrength >= 3"></div>
+              <div class="bar" [class.active]="passStrength >= 2" [class.medium]="passStrength === 2" [class.strong]="passStrength >= 3"></div>
+              <div class="bar" [class.active]="passStrength >= 3" [class.strong]="passStrength >= 3"></div>
+            </div>
+            <span class="strength-label">{{ passStrengthLabel }}</span>
+          </div>
+
+          <label class="terms-label">
+            <input type="checkbox" [(ngModel)]="agreedToTerms" name="terms" required/>
+            <span class="custom-check"></span>
+            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+          </label>
+
+          <div class="error-msg" *ngIf="errorMsg">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ errorMsg }}
+          </div>
+
+          <button type="submit" class="btn-submit" [class.loading]="isLoading" [disabled]="isLoading || !agreedToTerms">
+            <span *ngIf="!isLoading">Create Account</span>
+            <div class="spinner" *ngIf="isLoading"></div>
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>or continue with</span>
+        </div>
+
+        <div class="social-btns">
+          <button type="button" class="social-btn" (click)="registerWithGoogle()">
+            <svg width="18" height="18" viewBox="0 0 18 18">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.909-2.259c-.806.54-1.837.86-3.047.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/>
+            </svg>
+            Google
+          </button>
+          <button type="button" class="social-btn" (click)="registerWithMicrosoft()">
+            <ion-icon name="logo-microsoft"></ion-icon>
+            Microsoft
+          </button>
+        </div>
+
+        <p class="login-link">
+          Already have an account? 
+          <a routerLink="/auth/login">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</ion-content>

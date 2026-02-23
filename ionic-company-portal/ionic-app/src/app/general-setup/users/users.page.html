@@ -1,0 +1,157 @@
+<div class="roles-content">
+  <div class="setup-page users-page">
+    <section class="users-hero card">
+      <div class="users-hero__copy">
+        <p class="hero-kicker">Identity Access</p>
+        <h1 class="page-title">Users</h1>
+        <p class="page-subtitle">Create and manage user accounts with username and password credentials.</p>
+      </div>
+      <div class="users-hero__stats">
+        <div class="stat-box">
+          <span>Total Users</span>
+          <strong>{{ totalUsers }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>Active</span>
+          <strong>{{ activeUsers }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>Inactive</span>
+          <strong>{{ inactiveUsers }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-toolbar card">
+      <div class="toolbar-left">
+        <button class="btn-outline" (click)="loadUsers()" [disabled]="isLoading">{{ isLoading ? 'Loading...' : 'Load Users' }}</button>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn-primary" (click)="openModal()" [disabled]="!canManageUsers">
+          <ion-icon name="add-outline"></ion-icon>
+          Add User
+        </button>
+      </div>
+    </div>
+
+    <div class="page-toolbar card filter-toolbar">
+      <div class="toolbar-left">
+        <input type="text" class="form-control" placeholder="Search by name or username" [(ngModel)]="searchQuery" (ngModelChange)="filter()" />
+        <select class="form-control" [(ngModel)]="roleFilter" (ngModelChange)="filter()">
+          <option value="">All Roles</option>
+          <option *ngFor="let r of roleOptions">{{ r }}</option>
+        </select>
+        <select class="form-control" [(ngModel)]="statusFilter" (ngModelChange)="filter()">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card notice" *ngIf="!canManageUsers">
+      You have view-only access. Only <strong>Admin</strong> or <strong>Super Admin</strong> can add, edit, or delete users.
+    </div>
+    <div class="card notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <section class="card users-table-card">
+      <div class="card-header">
+        <h3>User Registry</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Last Login</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of filtered">
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" [style.background]="u.avatarBg">{{ u.initials }}</div>
+                  <div class="identity">
+                    <span class="identity-name">{{ u.name }}</span>
+                    <span class="identity-user">{{ u.username }}</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mono-tag">&#64;{{ u.username }}</span></td>
+              <td><span class="data-pill role-pill">{{ u.role }}</span></td>
+              <td><span class="data-pill dept-pill">{{ u.dept }}</span></td>
+              <td>
+                <span class="badge" [class]="u.active ? 'badge-success' : 'badge-danger'">{{ u.active ? 'Active' : 'Inactive' }}</span>
+              </td>
+              <td>{{ u.lastLogin }}</td>
+              <td>
+                <div class="actions-cell">
+                  <button class="action-btn edit" (click)="editUser(u)" [disabled]="!canManageUsers"><ion-icon name="create-outline"></ion-icon></button>
+                  <button class="action-btn delete" (click)="deleteUser(u)" [disabled]="!canManageUsers"><ion-icon name="trash-outline"></ion-icon></button>
+                  <button class="action-btn" (click)="toggleStatus(u)" [disabled]="!canManageUsers"><ion-icon name="swap-horizontal-outline"></ion-icon></button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!filtered.length">
+              <td colspan="7" class="empty-cell">No users found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal($event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>{{ editMode ? 'Edit User' : 'Create User' }}</h3>
+        <button class="close-btn" (click)="closeModal(null)"><ion-icon name="close-outline"></ion-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-intro">Enter user identity and login credentials. Username must be unique.</div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="Full name" [(ngModel)]="form.name"/>
+          <div class="field-error" *ngIf="submitted && formErrors.name">{{ formErrors.name }}</div>
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" class="form-control" placeholder="e.g. alex.morgan" [(ngModel)]="form.username"/>
+          <div class="field-error" *ngIf="submitted && formErrors.username">{{ formErrors.username }}</div>
+        </div>
+        <div class="form-group">
+          <label>Password {{ editMode ? '(Optional - keep blank to retain current)' : '' }}</label>
+          <input type="password" class="form-control" placeholder="Enter password" [(ngModel)]="form.password"/>
+          <div class="field-error" *ngIf="submitted && formErrors.password">{{ formErrors.password }}</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Role</label>
+            <select class="form-control" [(ngModel)]="form.role">
+              <option value="">Select role</option>
+              <option *ngFor="let r of roleOptions">{{ r }}</option>
+            </select>
+            <div class="field-error" *ngIf="submitted && formErrors.role">{{ formErrors.role }}</div>
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <select class="form-control" [(ngModel)]="form.dept">
+              <option value="">Select department</option>
+              <option *ngFor="let d of deptOptions">{{ d }}</option>
+            </select>
+            <div class="field-error" *ngIf="submitted && formErrors.dept">{{ formErrors.dept }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="closeModal(null)">Cancel</button>
+        <button class="btn-primary" (click)="saveUser()" [disabled]="!canManageUsers">{{ editMode ? 'Save Changes' : 'Create User' }}</button>
+      </div>
+    </div>
+  </div>
+</div>

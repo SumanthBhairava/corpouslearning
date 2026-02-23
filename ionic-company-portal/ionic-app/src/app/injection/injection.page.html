@@ -1,0 +1,123 @@
+<div class="roles-content">
+  <div class="setup-page roles-page injection-page">
+    <section class="roles-hero card">
+      <div class="roles-hero__copy">
+        <p class="hero-kicker">Injection Service</p>
+        <h1 class="page-title">Document Upload Center</h1>
+        <p class="page-subtitle">
+          Upload folders or single DOCX files to train corpus with version continuity.
+        </p>
+      </div>
+      <div class="roles-hero__stats">
+        <div class="stat-box">
+          <span>Current State</span>
+          <strong>{{ currentStatus || 'idle' }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>Selected Files</span>
+          <strong>{{ folderFiles.length + (docxFile ? 1 : 0) }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>History Rows</span>
+          <strong>{{ uploadedHistory.length }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <div class="left-zone">
+        <article class="card roles-table-card upload-card">
+          <div class="section-head">
+            <h3>Upload Queue</h3>
+            <button class="btn-outline" (click)="fetchHistory()">Refresh History</button>
+          </div>
+
+          <div class="upload-grid">
+            <div class="upload-block">
+              <h4>Folder Upload</h4>
+              <p class="muted">Choose a folder with nested customer/subfolder DOCX files.</p>
+              <input class="form-control" [class.invalid]="submitted && !!formErrors.folderFiles" type="file" multiple webkitdirectory directory (change)="onFolderChange($event)" />
+              <div class="field-error" *ngIf="submitted && formErrors.folderFiles">{{ formErrors.folderFiles }}</div>
+              <p class="file-meta" *ngIf="folderFiles.length">{{ folderFiles.length }} files selected</p>
+              <button class="btn-primary" (click)="uploadFolder()" [disabled]="isSubmitting">Start Folder Learning</button>
+            </div>
+
+            <div class="upload-block">
+              <h4>Single DOCX</h4>
+              <p class="muted">Upload one contract and map it to a customer path.</p>
+              <label>
+                Customer Path
+                <input class="form-control" type="text" [(ngModel)]="customerPath" placeholder="CustomerA/subfolder" />
+              </label>
+              <input class="form-control" [class.invalid]="submitted && !!formErrors.docxFile" type="file" accept=".docx" (change)="onDocxFileChange($event)" />
+              <div class="field-error" *ngIf="submitted && formErrors.docxFile">{{ formErrors.docxFile }}</div>
+              <p class="file-meta" *ngIf="docxFile">{{ docxFile.name }}</p>
+              <button class="btn-primary" (click)="uploadDocx()" [disabled]="isSubmitting">Start DOCX Learning</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card roles-table-card job-card" *ngIf="jobId">
+          <div class="job-head">
+            <h3>Learning Timeline</h3>
+            <span class="status-chip" [ngClass]="statusClass(currentStatus)">{{ currentStatus || 'queued' }}</span>
+          </div>
+          <p class="job-id">Job ID: {{ jobId }}</p>
+          <ul class="progress-list">
+            <li *ngFor="let item of progress">{{ item }}</li>
+          </ul>
+        </article>
+
+        <article class="card roles-table-card summary-card" *ngIf="summary">
+          <h3>Learning Summary</h3>
+          <div class="metric-grid">
+            <div class="metric-box">
+              <span>Customers</span>
+              <strong>{{ summaryNumber('customers_analyzed') }}</strong>
+            </div>
+            <div class="metric-box">
+              <span>Documents</span>
+              <strong>{{ summaryNumber('total_documents') }}</strong>
+            </div>
+            <div class="metric-box">
+              <span>Chunks Added</span>
+              <strong>{{ summaryNumber('total_chunks_added') }}</strong>
+            </div>
+            <div class="metric-box">
+              <span>Sequences</span>
+              <strong>{{ summaryNumber('negotiation_sequences') }}</strong>
+            </div>
+          </div>
+          <div class="contract-types" *ngIf="summaryTypes().length">
+            <span class="types-label">Agreement Types Learned</span>
+            <div class="type-list">
+              <span class="type-chip" *ngFor="let type of summaryTypes()">{{ type }}</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="right-zone">
+        <article class="card roles-table-card history-card">
+          <h3>Upload History</h3>
+          <p class="muted" *ngIf="!uploadedHistory.length">No uploads yet.</p>
+          <div class="history-list" *ngIf="uploadedHistory.length">
+            <article class="history-item" *ngFor="let item of uploadedHistory">
+              <div class="history-top">
+                <strong>{{ item.corpus_version || 'auto-version' }}</strong>
+                <span class="status-chip" [ngClass]="statusClass(item.status)">{{ item.status }}</span>
+              </div>
+              <p class="history-meta">Job: {{ item.job_id }}</p>
+              <p class="history-meta">Created: {{ item.created_at | date:'medium' }}</p>
+              <p class="history-meta">Updated: {{ item.updated_at | date:'medium' }}</p>
+              <p class="history-meta">Steps: {{ item.progress_count }}</p>
+              <p class="history-error" *ngIf="item.error">{{ item.error }}</p>
+            </article>
+          </div>
+        </article>
+      </aside>
+    </section>
+
+    <div class="card notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  </div>
+</div>

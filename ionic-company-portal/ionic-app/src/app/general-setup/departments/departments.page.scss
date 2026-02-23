@@ -1,0 +1,229 @@
+@import '../../../theme/variables';
+@import '../roles/roles.page.scss';
+
+.dept-page {
+  display: grid;
+  gap: 14px;
+}
+
+.dept-hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 14px;
+  padding: 20px;
+  background: linear-gradient(135deg, #0f3246 0%, #176382 55%, #0f8f8f 100%);
+  border: none;
+
+  .hero-kicker {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-size: 11px;
+    color: rgba(226, 241, 255, 0.78);
+    font-weight: 700;
+  }
+
+  .page-title {
+    color: #f7fbff;
+    margin: 8px 0 0;
+  }
+
+  .page-subtitle {
+    color: rgba(233, 244, 255, 0.9);
+    margin-top: 8px;
+    max-width: 62ch;
+  }
+}
+
+.dept-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  align-content: center;
+}
+
+.dept-table-card {
+  overflow: hidden;
+}
+
+.dept-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 13px;
+    color: var(--color-text-primary);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(240, 244, 250, 0.7); }
+  tr.selected td { background: rgba(232,160,32,0.08); }
+}
+
+.dept-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.dept-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ion-icon { font-size: 18px; }
+}
+
+.dept-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.util-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dept-detail-area { margin-bottom: 24px; }
+
+.dept-detail-card { overflow: hidden; }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  
+  h3 { font-size: 15px; font-weight: 700; color: var(--color-primary); margin: 0; }
+  
+  .see-all-btn {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    &:hover { color: var(--color-danger); }
+  }
+}
+
+// Color picker
+.color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0;
+  
+  .color-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2.5px solid transparent;
+    
+    &.active { border-color: var(--color-primary); transform: scale(1.15); }
+    &:hover { transform: scale(1.1); }
+  }
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 13px;
+    color: var(--color-text-primary);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cell-name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cell-email {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.cell-muted {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .dept-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .dept-table th,
+  .dept-table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+}

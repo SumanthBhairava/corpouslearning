@@ -1,0 +1,138 @@
+<div class="workflow-content">
+  <div class="texture-layer"></div>
+  <div class="workflow-shell">
+    <section class="hero">
+      <div>
+        <p class="kicker">Owner / Manager / Employee Flow</p>
+        <h1>Document Governance Workflow</h1>
+        <p>Create assignments, collect user submissions, review decisions, and keep full audit history.</p>
+      </div>
+      <div class="hero-meta">
+        <button class="btn-secondary" (click)="fetchDocuments()" [disabled]="isBusy">Load Documents</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h3>1. Owner Creates Document</h3>
+        <label>Title <input type="text" [class.invalid]="createSubmitted && !!createErrors.title" [(ngModel)]="createTitle" placeholder="MSA - Vendor Alpha" /></label>
+        <div class="field-error" *ngIf="createSubmitted && createErrors.title">{{ createErrors.title }}</div>
+        <label>Owner ID <input type="text" [class.invalid]="createSubmitted && !!createErrors.ownerId" [(ngModel)]="ownerId" placeholder="owner_1" /></label>
+        <div class="field-error" *ngIf="createSubmitted && createErrors.ownerId">{{ createErrors.ownerId }}</div>
+        <label>Manager ID <input type="text" [class.invalid]="createSubmitted && !!createErrors.managerId" [(ngModel)]="managerId" placeholder="manager_1" /></label>
+        <div class="field-error" *ngIf="createSubmitted && createErrors.managerId">{{ createErrors.managerId }}</div>
+        <label>Due Date (Optional) <input type="date" [(ngModel)]="dueAt" /></label>
+        <input type="file" [class.invalid]="createSubmitted && !!createErrors.file" accept=".docx" (change)="onCreateFileChange($event)" />
+        <div class="field-error" *ngIf="createSubmitted && createErrors.file">{{ createErrors.file }}</div>
+        <button class="btn-primary" (click)="createDocument()" [disabled]="isBusy">Create Workflow Document</button>
+      </article>
+
+      <article class="card">
+        <h3>2. Manager Assigns Employees</h3>
+        <label>Document ID <input type="text" [(ngModel)]="assignDocumentId" placeholder="paste document id" /></label>
+        <label>Assigned By <input type="text" [(ngModel)]="assignedBy" placeholder="manager_1" /></label>
+        <label>Assignee IDs (comma-separated)
+          <input type="text" [(ngModel)]="assigneeIdsRaw" placeholder="emp_1, emp_2, emp_3" />
+        </label>
+        <button class="btn-primary" (click)="assignDocument()" [disabled]="isBusy">Assign</button>
+      </article>
+
+      <article class="card">
+        <h3>3. Employee Tasks</h3>
+        <label>Employee ID <input type="text" [(ngModel)]="employeeAssigneeId" placeholder="emp_1" /></label>
+        <button class="btn-secondary" (click)="fetchEmployeeTasks()" [disabled]="isBusy">Load My Tasks</button>
+        <label>Assignment ID <input type="text" [(ngModel)]="employeeAssignmentId" placeholder="assignment id" /></label>
+        <label>Summary Comment <textarea rows="3" [(ngModel)]="employeeComment" placeholder="what changed and why"></textarea></label>
+        <label>Edited Content <textarea rows="4" [(ngModel)]="employeeEditedContent" placeholder="final text proposal"></textarea></label>
+        <button class="btn-primary" (click)="submitEmployeeTask()" [disabled]="isBusy">Submit for Review</button>
+      </article>
+
+      <article class="card">
+        <h3>4. Manager Review</h3>
+        <label>Manager ID <input type="text" [(ngModel)]="reviewManagerId" placeholder="manager_1" /></label>
+        <button class="btn-secondary" (click)="fetchManagerQueue()" [disabled]="isBusy">Load Manager Queue</button>
+        <label>Submission ID <input type="text" [(ngModel)]="reviewSubmissionId" placeholder="submission id" /></label>
+        <label>Action
+          <select [(ngModel)]="reviewAction">
+            <option value="approve">approve</option>
+            <option value="reject">reject</option>
+            <option value="request_changes">request_changes</option>
+          </select>
+        </label>
+        <label>Notes <textarea rows="3" [(ngModel)]="reviewNotes" placeholder="review comments"></textarea></label>
+        <button class="btn-primary" (click)="reviewSubmission()" [disabled]="isBusy">Submit Review</button>
+      </article>
+    </section>
+
+    <section class="grid two">
+    <article class="card list-card">
+      <h3>Documents</h3>
+      <div class="list" *ngIf="documents.length; else emptyDocs">
+        <div class="item" *ngFor="let d of documents">
+          <strong>{{ d['title'] }}</strong>
+          <p>ID: {{ d['id'] }}</p>
+          <p>Status: {{ d['status'] }}</p>
+          <p>Manager: {{ d['manager_id'] }}</p>
+        </div>
+      </div>
+      <ng-template #emptyDocs><p class="muted">No documents loaded.</p></ng-template>
+    </article>
+
+    <article class="card list-card">
+      <h3>Manager Queue</h3>
+      <div class="list" *ngIf="managerQueue.length; else emptyQueue">
+        <div class="item" *ngFor="let q of managerQueue">
+          <strong>{{ q['title'] }}</strong>
+          <p>Submission: {{ q['submission_id'] }}</p>
+          <p>Assignee: {{ q['assignee_id'] }}</p>
+          <p>Status: {{ q['review_status'] }}</p>
+        </div>
+      </div>
+      <ng-template #emptyQueue><p class="muted">No pending submissions.</p></ng-template>
+    </article>
+    </section>
+
+    <section class="grid two">
+    <article class="card list-card">
+      <h3>Employee Tasks</h3>
+      <div class="list" *ngIf="assigneeTasks.length; else emptyTasks">
+        <div class="item" *ngFor="let t of assigneeTasks">
+          <strong>{{ t['title'] }}</strong>
+          <p>Assignment: {{ t['assignment_id'] }}</p>
+          <p>Status: {{ t['assignment_status'] }}</p>
+          <p>Due: {{ t['due_at'] || '-' }}</p>
+        </div>
+      </div>
+      <ng-template #emptyTasks><p class="muted">No tasks loaded.</p></ng-template>
+    </article>
+
+    <article class="card list-card">
+      <h3>Inspect Document</h3>
+      <label>Document ID <input type="text" [(ngModel)]="inspectDocumentId" placeholder="document id" /></label>
+      <button class="btn-secondary" (click)="inspectDocument()" [disabled]="isBusy">Load Submissions + Audit</button>
+      <h4>Submissions</h4>
+      <div class="list compact" *ngIf="documentSubmissionsList.length; else emptySubs">
+        <div class="item" *ngFor="let s of documentSubmissionsList">
+          <p>{{ s['submission_id'] }} • {{ s['assignee_id'] }} • {{ s['review_status'] }}</p>
+        </div>
+      </div>
+      <ng-template #emptySubs><p class="muted">No submissions loaded.</p></ng-template>
+
+      <h4>Audit Trail</h4>
+      <div class="list compact" *ngIf="documentAuditList.length; else emptyAudit">
+        <div class="item" *ngFor="let a of documentAuditList">
+          <p>{{ a['created_at'] }} • {{ a['event_type'] }} • {{ a['actor_id'] }}</p>
+        </div>
+      </div>
+      <ng-template #emptyAudit><p class="muted">No audit events loaded.</p></ng-template>
+    </article>
+    </section>
+
+    <section class="card" *ngIf="lastResponse">
+      <h3>Last API Response</h3>
+      <pre>{{ lastResponse | json }}</pre>
+    </section>
+
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+@import 'theme/variables';
+
+// Reset Ionic defaults
+ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+ion-header { display: none; }
+ion-footer { display: none; }

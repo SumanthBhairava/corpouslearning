@@ -1,0 +1,126 @@
+<nav class="sidebar" [class.collapsed]="collapsed">
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+        <path d="M8 16L14 10L20 16L14 22L8 16Z" fill="#E8A020"/>
+        <path d="M14 10L20 4L26 10L20 16L14 10Z" fill="rgba(255,255,255,0.6)"/>
+        <path d="M14 22L20 16L26 22L20 28L14 22Z" fill="rgba(255,255,255,0.3)"/>
+      </svg>
+    </div>
+    <span class="logo-name">TechCorp</span>
+    <button class="collapse-btn" (click)="onToggle()">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- User Profile Mini -->
+  <div class="user-mini">
+    <div class="avatar">{{ userInitials }}</div>
+    <div class="user-info">
+      <span class="user-name">{{ user?.name }}</span>
+      <span class="user-role">{{ user?.role }}</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="sidebar-nav">
+    <!-- Main Menu -->
+    <div class="nav-section">
+      <span class="nav-label">Main Menu</span>
+      <a class="nav-item" routerLink="/app/dashboard" routerLinkActive="active" (click)="onClose()">
+        <span class="nav-icon"><ion-icon name="grid-outline"></ion-icon></span>
+        <span class="nav-text">Dashboard</span>
+      </a>
+      <a class="nav-item" *ngIf="canAccess('injection')" routerLink="/app/injection" routerLinkActive="active" (click)="onClose()">
+        <span class="nav-icon"><ion-icon name="flask-outline"></ion-icon></span>
+        <span class="nav-text">Injection</span>
+      </a>
+      <a class="nav-item" *ngIf="canAccess('analyse')" routerLink="/app/analyse" routerLinkActive="active" (click)="onClose()">
+        <span class="nav-icon"><ion-icon name="search-outline"></ion-icon></span>
+        <span class="nav-text">Analyse</span>
+      </a>
+      <a class="nav-item" *ngIf="canAccess('workflow')" routerLink="/app/workflow" routerLinkActive="active" (click)="onClose()">
+        <span class="nav-icon"><ion-icon name="git-network-outline"></ion-icon></span>
+        <span class="nav-text">Workflow</span>
+      </a>
+    </div>
+
+    <!-- General Setup -->
+    <div class="nav-section" *ngIf="canSeeGeneralSetup">
+      <span class="nav-label">General Setup</span>
+      
+      <div class="nav-group" [class.open]="generalSetupOpen">
+        <button class="nav-item nav-parent" (click)="toggleGeneralSetup()">
+          <span class="nav-icon"><ion-icon name="settings-outline"></ion-icon></span>
+          <span class="nav-text">General Setup</span>
+          <ion-icon name="chevron-down-outline" class="nav-arrow"></ion-icon>
+        </button>
+        
+        <div class="nav-children">
+          <a class="nav-child" *ngIf="canAccess('users')" routerLink="/app/general-setup/users" routerLinkActive="active" (click)="onClose()">
+            <span class="child-dot"></span>
+            <ion-icon name="people-outline"></ion-icon>
+            <span>Users</span>
+          </a>
+          <a class="nav-child" *ngIf="canAccess('roles')" routerLink="/app/general-setup/roles" routerLinkActive="active" (click)="onClose()">
+            <span class="child-dot"></span>
+            <ion-icon name="shield-outline"></ion-icon>
+            <span>Roles</span>
+          </a>
+          <a class="nav-child" *ngIf="canAccess('departments')" routerLink="/app/general-setup/departments" routerLinkActive="active" (click)="onClose()">
+            <span class="child-dot"></span>
+            <ion-icon name="business-outline"></ion-icon>
+            <span>Departments</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other Menu Items -->
+    <div class="nav-section">
+      <span class="nav-label">Management</span>
+      <a class="nav-item" href="#" (click)="$event.preventDefault()">
+        <span class="nav-icon"><ion-icon name="bar-chart-outline"></ion-icon></span>
+        <span class="nav-text">Analytics</span>
+        <span class="nav-badge">New</span>
+      </a>
+      <a class="nav-item" href="#" (click)="$event.preventDefault()">
+        <span class="nav-icon"><ion-icon name="document-text-outline"></ion-icon></span>
+        <span class="nav-text">Reports</span>
+      </a>
+      <a class="nav-item" href="#" (click)="$event.preventDefault()">
+        <span class="nav-icon"><ion-icon name="notifications-outline"></ion-icon></span>
+        <span class="nav-text">Notifications</span>
+        <span class="nav-badge count">3</span>
+      </a>
+    </div>
+    
+    <div class="nav-section">
+      <span class="nav-label">Account</span>
+      <a class="nav-item" href="#" (click)="$event.preventDefault()">
+        <span class="nav-icon"><ion-icon name="person-circle-outline"></ion-icon></span>
+        <span class="nav-text">Profile</span>
+      </a>
+      <a class="nav-item" href="#" (click)="$event.preventDefault()">
+        <span class="nav-icon"><ion-icon name="help-circle-outline"></ion-icon></span>
+        <span class="nav-text">Help & Support</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="sidebar-footer__plan">
+      <div class="plan-icon"><ion-icon name="flash-outline"></ion-icon></div>
+      <div class="plan-info">
+        <span>Pro Plan</span>
+        <small>Upgrade available</small>
+      </div>
+    </div>
+    <button class="logout-btn" (click)="logout()">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+</nav>

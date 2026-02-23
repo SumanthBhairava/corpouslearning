@@ -1,0 +1,106 @@
+<div class="roles-content">
+  <div class="setup-page dept-page">
+    <section class="dept-hero card">
+      <div class="dept-hero__copy">
+        <p class="hero-kicker">Org Structure</p>
+        <h1 class="page-title">Departments</h1>
+        <p class="page-subtitle">Manage departments, ownership, and hiring capacity in one centralized registry.</p>
+      </div>
+      <div class="dept-hero__stats">
+        <div class="stat-box">
+          <span>Total Departments</span>
+          <strong>{{ departmentCount }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>Total Members</span>
+          <strong>{{ totalMembers }}</strong>
+        </div>
+        <div class="stat-box">
+          <span>Open Roles</span>
+          <strong>{{ totalOpenRoles }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-toolbar card">
+      <div class="toolbar-left">
+        <button class="btn-outline" (click)="loadDepartments()" [disabled]="isLoading">{{ isLoading ? 'Loading...' : 'Load Departments' }}</button>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn-primary" (click)="openModal()" [disabled]="!canManageDepartments">
+          <ion-icon name="add-outline"></ion-icon>
+          Add Department
+        </button>
+      </div>
+    </div>
+
+    <div class="card notice" *ngIf="!canManageDepartments">
+      You have view-only access. Only <strong>Admin</strong> or <strong>Super Admin</strong> can add, edit, or delete departments.
+    </div>
+    <div class="card notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <section class="card dept-table-card">
+      <div class="card-header">
+        <h3>Department Registry</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="dept-table">
+          <thead>
+            <tr>
+              <th>Department</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dept of departments">
+              <td>
+                <div class="dept-cell">
+                  <div class="dept-icon" [style.background]="dept.color + '20'" [style.color]="dept.color">
+                    <ion-icon [name]="dept.icon"></ion-icon>
+                  </div>
+                  <span>{{ dept.name }}</span>
+                </div>
+              </td>
+              <td>{{ dept.description || 'No description provided.' }}</td>
+              <td>
+                <div class="dept-actions">
+                  <button class="action-btn edit" (click)="editDept(dept)" [disabled]="!canManageDepartments"><ion-icon name="create-outline"></ion-icon></button>
+                  <button class="action-btn delete" (click)="deleteDept(dept)" [disabled]="!canManageDepartments"><ion-icon name="trash-outline"></ion-icon></button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!departments.length && !isLoading">
+              <td colspan="3" class="empty-cell">No departments found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal($event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>{{ editMode ? 'Edit Department' : 'Add Department' }}</h3>
+        <button class="close-btn" (click)="closeModal(null)"><ion-icon name="close-outline"></ion-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Department Name</label>
+          <input type="text" class="form-control" [class.invalid]="submitted && !!formErrors.name" placeholder="e.g. Product Design" [(ngModel)]="form.name"/>
+          <div class="field-error" *ngIf="submitted && formErrors.name">{{ formErrors.name }}</div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" [class.invalid]="submitted && !!formErrors.description" rows="2" placeholder="Short department description" [(ngModel)]="form.description"></textarea>
+          <div class="field-error" *ngIf="submitted && formErrors.description">{{ formErrors.description }}</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="closeModal(null)">Cancel</button>
+        <button class="btn-primary" (click)="saveDept()" [disabled]="!canManageDepartments">{{ editMode ? 'Save' : 'Create' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
